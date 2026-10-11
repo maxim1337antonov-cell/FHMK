@@ -15,17 +15,43 @@ from aiogram.types import (
 def main_menu_kb() -> InlineKeyboardMarkup:
     """Главное меню в чате"""
     return InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text="📈 Купить", callback_data="menu:buy"),
-            InlineKeyboardButton(text="📉 Продать", callback_data="menu:sell")
-        ],
+        [InlineKeyboardButton(text="🤝 P2P", callback_data="menu:p2p")],
         [InlineKeyboardButton(text="⚡️ Создать объявление", callback_data="menu:create")],
-        [InlineKeyboardButton(text="🛡 АВТОГАРАНТ", callback_data="garant:start")],
-        [InlineKeyboardButton(text="🗳 Мои сделки", callback_data="menu:deals")],
+        [InlineKeyboardButton(text="🛡 Автогарант", callback_data="garant:menu")],
         [
             InlineKeyboardButton(text="❓ Помощь", callback_data="menu:help"),
             InlineKeyboardButton(text="👤 Профиль", callback_data="menu:profile")
         ]
+    ])
+
+
+def garant_menu_kb() -> InlineKeyboardMarkup:
+    """Меню Автогаранта"""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="⚡️ Создать сделку", callback_data="garant:start")],
+        [InlineKeyboardButton(text="🛡 Мои сделки Гаранта", callback_data="garant:deals_menu")],
+        [InlineKeyboardButton(text="◀️ Главное меню", callback_data="menu:back")]
+    ])
+
+
+def garant_deals_kb() -> InlineKeyboardMarkup:
+    """Сделки Автогаранта"""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="⏱️ Активные", callback_data="garant:deals_active"),
+         InlineKeyboardButton(text="📂 История", callback_data="garant:deals_history")],
+        [InlineKeyboardButton(text="◀️ Назад", callback_data="garant:menu")]
+    ])
+
+
+def p2p_menu_kb() -> InlineKeyboardMarkup:
+    """Меню P2P"""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="📈 Купить", callback_data="menu:buy"),
+            InlineKeyboardButton(text="📉 Продать", callback_data="menu:sell")
+        ],
+        [InlineKeyboardButton(text="🗳 Мои сделки", callback_data="menu:deals")],
+        [InlineKeyboardButton(text="◀️ Главное меню", callback_data="menu:back")]
     ])
 
 
