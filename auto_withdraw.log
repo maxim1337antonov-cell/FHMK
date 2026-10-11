@@ -1,0 +1,161 @@
+2025-11-13 00:41:35,264 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Создаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 00:41:35,264 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Используется сессия: auto_withdraw_session
+2025-11-13 00:41:36,630 - pyrogram.session.auth - INFO - Start creating a new auth key on DC2
+2025-11-13 00:41:36,631 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 00:41:36,678 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 00:41:38,052 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2025-11-13 00:41:38,052 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 00:41:38,164 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 00:41:38,207 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 00:41:38,210 - pyrogram.session.session - INFO - NetworkTask started
+2025-11-13 00:41:38,459 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-11-13 00:41:38,459 - pyrogram.session.session - INFO - Device: CPython 3.12.0 - Pyrogram 2.0.106
+2025-11-13 00:41:38,459 - pyrogram.session.session - INFO - System: Windows 10 (en)
+2025-11-13 00:41:38,460 - pyrogram.session.session - INFO - Session started
+2025-11-13 00:41:38,478 - pyrogram.session.session - INFO - PingTask started
+2025-11-13 00:41:38,479 - pyrogram.session.session - INFO - PingTask stopped
+2025-11-13 00:41:38,480 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-11-13 00:41:38,480 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 00:41:38,481 - pyrogram.session.session - INFO - Session stopped
+2025-11-13 00:54:32,380 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Создаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 00:54:32,381 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Используется сессия: auto_withdraw_session
+2025-11-13 00:54:33,875 - pyrogram.session.auth - INFO - Start creating a new auth key on DC2
+2025-11-13 00:54:33,876 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 00:54:33,924 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 00:54:35,711 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2025-11-13 00:54:35,712 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 00:54:35,747 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 00:54:35,796 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 00:54:35,799 - pyrogram.session.session - INFO - NetworkTask started
+2025-11-13 00:54:36,058 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-11-13 00:54:36,058 - pyrogram.session.session - INFO - Device: CPython 3.12.0 - Pyrogram 2.0.106
+2025-11-13 00:54:36,058 - pyrogram.session.session - INFO - System: Windows 10 (en)
+2025-11-13 00:54:36,059 - pyrogram.session.session - INFO - Session started
+2025-11-13 00:54:36,064 - pyrogram.session.session - INFO - PingTask started
+2025-11-13 00:54:36,065 - pyrogram.session.session - INFO - PingTask stopped
+2025-11-13 00:54:36,066 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-11-13 00:54:36,066 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 00:54:36,067 - pyrogram.session.session - INFO - Session stopped
+2025-11-13 01:16:36,725 - shared_pyrogram_client - INFO - 🔌 Создаю общий Pyrogram клиент, сессия: forwarder_session
+2025-11-13 01:16:36,727 - shared_pyrogram_client - INFO - 🔌 Запускаю общий Pyrogram клиент...
+2025-11-13 01:16:37,899 - auto_withdraw - ERROR - ❌ [АВТОВЫВОД] Ошибка при инициализации Pyrogram клиента: database is locked
+Traceback (most recent call last):
+  File "C:\p2p-bot\auto_withdraw.py", line 233, in init_withdraw_client
+    client = await ensure_client_started()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\p2p-bot\shared_pyrogram_client.py", line 69, in ensure_client_started
+    await client.start()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\methods\utilities\start.py", line 58, in start
+    is_authorized = await self.connect()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\methods\auth\connect.py", line 40, in connect
+    await self.load_session()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\client.py", line 616, in load_session
+    await self.storage.open()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\storage\file_storage.py", line 63, in open
+    self.update()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\storage\file_storage.py", line 52, in update
+    self.version(version)
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\storage\sqlite_storage.py", line 219, in version
+    self.conn.execute(
+sqlite3.OperationalError: database is locked
+2025-11-13 01:19:47,413 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Создаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 01:19:47,413 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Используется сессия: auto_withdraw_session
+2025-11-13 01:19:48,915 - pyrogram.session.auth - INFO - Start creating a new auth key on DC2
+2025-11-13 01:19:48,915 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 01:19:48,964 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 01:19:50,569 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2025-11-13 01:19:50,570 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 01:19:50,632 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 01:19:50,678 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 01:19:50,681 - pyrogram.session.session - INFO - NetworkTask started
+2025-11-13 01:19:50,924 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-11-13 01:19:50,924 - pyrogram.session.session - INFO - Device: CPython 3.12.0 - Pyrogram 2.0.106
+2025-11-13 01:19:50,925 - pyrogram.session.session - INFO - System: Windows 10 (en)
+2025-11-13 01:19:50,925 - pyrogram.session.session - INFO - Session started
+2025-11-13 01:19:50,929 - pyrogram.session.session - INFO - PingTask started
+2025-11-13 01:19:50,930 - pyrogram.session.session - INFO - PingTask stopped
+2025-11-13 01:19:50,931 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-11-13 01:19:50,931 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 01:19:50,932 - pyrogram.session.session - INFO - Session stopped
+2025-11-13 01:23:39,802 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Создаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 01:23:39,802 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Используется сессия: auto_withdraw_session
+2025-11-13 01:23:39,803 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Запускаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 01:23:41,408 - pyrogram.session.auth - INFO - Start creating a new auth key on DC2
+2025-11-13 01:23:41,408 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 01:23:41,458 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 01:23:43,140 - pyrogram.session.auth - INFO - Done auth key exchange: DhGenOk
+2025-11-13 01:23:43,140 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 01:23:43,208 - pyrogram.connection.connection - INFO - Connecting...
+2025-11-13 01:23:43,256 - pyrogram.connection.connection - INFO - Connected! Production DC2 - IPv4
+2025-11-13 01:23:43,260 - pyrogram.session.session - INFO - NetworkTask started
+2025-11-13 01:23:43,507 - pyrogram.session.session - INFO - Session initialized: Layer 158
+2025-11-13 01:23:43,508 - pyrogram.session.session - INFO - Device: CPython 3.12.0 - Pyrogram 2.0.106
+2025-11-13 01:23:43,508 - pyrogram.session.session - INFO - System: Windows 10 (en)
+2025-11-13 01:23:43,511 - pyrogram.session.session - INFO - Session started
+2025-11-13 01:23:43,516 - pyrogram.session.session - INFO - PingTask started
+2025-11-13 01:23:43,517 - pyrogram.session.session - INFO - PingTask stopped
+2025-11-13 01:23:43,518 - pyrogram.session.session - INFO - NetworkTask stopped
+2025-11-13 01:23:43,519 - pyrogram.connection.connection - INFO - Disconnected
+2025-11-13 01:23:43,519 - pyrogram.session.session - INFO - Session stopped
+2025-11-13 01:23:43,520 - auto_withdraw - ERROR - ❌ [АВТОВЫВОД] Сессия не авторизована. Используется сессия: auto_withdraw_session
+2025-11-13 01:23:43,520 - auto_withdraw - ERROR - ❌ [АВТОВЫВОД] Запустите: py auth_withdraw_session.py для авторизации
+2025-11-13 01:23:43,520 - auto_withdraw - ERROR - ❌ [АВТОВЫВОД] Ошибка при инициализации Pyrogram клиента: Сессия auto_withdraw_session не авторизована. Запустите: py auth_withdraw_session.py
+Traceback (most recent call last):
+  File "C:\p2p-bot\auto_withdraw.py", line 253, in init_withdraw_client
+    await client.start()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\methods\utilities\start.py", line 62, in start
+    await self.authorize()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\client.py", line 343, in authorize
+    value = await ainput("Enter phone number or bot token: ")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\utils.py", line 40, in ainput
+    return await asyncio.get_event_loop().run_in_executor(executor, func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\p2p-bot\auto_withdraw.py", line 266, in init_withdraw_client
+    raise ConnectionError(f"Сессия {SESSION_NAME} не авторизована. Запустите: py auth_withdraw_session.py")
+ConnectionError: Сессия auto_withdraw_session не авторизована. Запустите: py auth_withdraw_session.py
+2025-11-13 01:26:13,708 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Создаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 01:26:13,709 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Используется сессия: forwarder_session
+2025-11-13 01:26:13,710 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Запускаю Pyrogram клиент для работы с @BmbP2p_bot...
+2025-11-13 01:26:13,711 - auto_withdraw - INFO - 🔌 [АВТОВЫВОД] Используется сессия: forwarder_session (та же, что и forwarder)
+2025-11-13 01:26:14,899 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 1/15, жду 0.5 сек...
+2025-11-13 01:26:16,586 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 2/15, жду 1.0 сек...
+2025-11-13 01:26:18,758 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 3/15, жду 1.5 сек...
+2025-11-13 01:26:21,449 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 4/15, жду 2.0 сек...
+2025-11-13 01:26:24,634 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 5/15, жду 2.5 сек...
+2025-11-13 01:26:28,325 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 6/15, жду 3.0 сек...
+2025-11-13 01:26:32,525 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 7/15, жду 3.5 сек...
+2025-11-13 01:26:37,230 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 8/15, жду 4.0 сек...
+2025-11-13 01:26:42,425 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 9/15, жду 4.5 сек...
+2025-11-13 01:26:48,119 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 10/15, жду 5.0 сек...
+2025-11-13 01:26:54,316 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 11/15, жду 5.5 сек...
+2025-11-13 01:27:01,002 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 12/15, жду 6.0 сек...
+2025-11-13 01:27:08,190 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 13/15, жду 6.5 сек...
+2025-11-13 01:27:15,883 - auto_withdraw - WARNING - ⚠️ [АВТОВЫВОД] База данных заблокирована (forwarder использует сессию), попытка 14/15, жду 7.0 сек...
+2025-11-13 01:27:24,073 - auto_withdraw - ERROR - ❌ [АВТОВЫВОД] Ошибка при инициализации Pyrogram клиента: database is locked
+Traceback (most recent call last):
+  File "C:\p2p-bot\auto_withdraw.py", line 255, in init_withdraw_client
+    await client.start()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\methods\utilities\start.py", line 58, in start
+    is_authorized = await self.connect()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\methods\auth\connect.py", line 40, in connect
+    await self.load_session()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\client.py", line 616, in load_session
+    await self.storage.open()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\storage\file_storage.py", line 63, in open
+    self.update()
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\storage\file_storage.py", line 52, in update
+    self.version(version)
+  File "C:\Users\Владик\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyrogram\storage\sqlite_storage.py", line 219, in version
+    self.conn.execute(
+sqlite3.OperationalError: database is locked
