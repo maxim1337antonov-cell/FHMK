@@ -19,7 +19,7 @@ from database import (
 )
 from database import is_valid_btc_bech32
 from keyboards import (
-    sell_or_buy_kb, my_deals_kb, main_menu_kb
+    sell_or_buy_kb, my_deals_kb, main_menu_kb, p2p_menu_kb
 )
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from utils import (
@@ -1050,6 +1050,18 @@ async def build_buy_list_page(deals: list, page: int = 1, per_page: int = 8, use
     return text, kb
 
 
+@router.callback_query(F.data == "menu:p2p")
+async def menu_p2p(callback: CallbackQuery, state: FSMContext):
+    """Меню P2P"""
+    await state.clear()
+    text = "🤝 <b>P2P Маркет</b>\n\nВыберите нужное действие:"
+    try:
+        await callback.message.edit_text(text, reply_markup=p2p_menu_kb(), parse_mode="HTML")
+    except Exception:
+        await callback.message.answer(text, reply_markup=p2p_menu_kb(), parse_mode="HTML")
+    await callback.answer()
+
+
 @router.callback_query(F.data == "menu:buy")
 async def menu_buy(callback: CallbackQuery, state: FSMContext):
     """Меню: Купить - показывает первую страницу заявок на продажу"""
@@ -1262,7 +1274,7 @@ async def mydeals_active(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.answer()
     
-    deals = await get_user_active_deals(callback.from_user.id)
+    deals = await get_user_active_deals(callback.from_user.id, exclude_garant=True)
     
     if not deals:
         kb = InlineKeyboardMarkup(inline_keyboard=[
@@ -1344,7 +1356,7 @@ async def _show_history_page(callback: CallbackQuery, page: int):
     MAX_PAGES = 100
     
     # Получаем общее количество сделок
-    total_deals = await get_user_history_deals_count(callback.from_user.id)
+    total_deals = await get_user_history_deals_count(callback.from_user.id, exclude_garant=True)
     
     if total_deals == 0:
         kb = InlineKeyboardMarkup(inline_keyboard=[
@@ -1375,7 +1387,7 @@ async def _show_history_page(callback: CallbackQuery, page: int):
     
     # Получаем сделки для текущей страницы
     offset = (page - 1) * DEALS_PER_PAGE
-    deals = await get_user_history_deals(callback.from_user.id, limit=DEALS_PER_PAGE, offset=offset)
+    deals = await get_user_history_deals(callback.from_user.id, limit=DEALS_PER_PAGE, offset=offset, exclude_garant=True)
     
     # Создаем клавиатуру с пагинацией
     kb = history_list_keyboard(deals, page=page, total_pages=total_pages)

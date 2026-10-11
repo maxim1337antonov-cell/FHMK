@@ -1966,7 +1966,7 @@ async def claim_deal_exclusive(deal_id: int, partner_id: int) -> bool:
 
 
 
-async def get_user_active_deals(user_id: int) -> list[dict]:
+async def get_user_active_deals(user_id: int, exclude_garant: bool = False, only_garant: bool = False) -> list[dict]:
 
     """Получить активные сделки пользователя"""
 
@@ -1990,14 +1990,18 @@ async def get_user_active_deals(user_id: int) -> list[dict]:
 
         placeholders = ','.join('?' * len(active_statuses))
 
+        query = f"SELECT * FROM deals WHERE (owner_id=? OR partner_id=?) AND status IN ({placeholders})"
+
+        if exclude_garant:
+            query += " AND (side != 'GARANT' OR side IS NULL)"
+        elif only_garant:
+            query += " AND side = 'GARANT'"
+
+        query += " ORDER BY created_at DESC"
+
         cur = await conn.execute(
-
-            f"SELECT * FROM deals WHERE (owner_id=? OR partner_id=?) "
-
-            f"AND status IN ({placeholders}) ORDER BY created_at DESC",
-
+            query,
             (user_id, user_id, *active_statuses)
-
         )
 
         rows = await cur.fetchall()
@@ -2008,7 +2012,7 @@ async def get_user_active_deals(user_id: int) -> list[dict]:
 
 
 
-async def get_user_history_deals(user_id: int, limit: int = None, offset: int = 0) -> list[dict]:
+async def get_user_history_deals(user_id: int, limit: int = None, offset: int = 0, exclude_garant: bool = False, only_garant: bool = False) -> list[dict]:
 
     """Получить историю сделок с пагинацией
 
@@ -2024,7 +2028,14 @@ async def get_user_history_deals(user_id: int, limit: int = None, offset: int = 
 
         placeholders = ','.join('?' * len(history_statuses))
         
-        query = f"SELECT * FROM deals WHERE (owner_id=? OR partner_id=?) AND status IN ({placeholders}) ORDER BY created_at DESC"
+        query = f"SELECT * FROM deals WHERE (owner_id=? OR partner_id=?) AND status IN ({placeholders})"
+
+        if exclude_garant:
+            query += " AND (side != 'GARANT' OR side IS NULL)"
+        elif only_garant:
+            query += " AND side = 'GARANT'"
+
+        query += " ORDER BY created_at DESC"
         
         if limit:
             query += f" LIMIT ? OFFSET ?"
@@ -2039,14 +2050,22 @@ async def get_user_history_deals(user_id: int, limit: int = None, offset: int = 
         return [dict(r) for r in rows]
 
 
-async def get_user_history_deals_count(user_id: int) -> int:
+async def get_user_history_deals_count(user_id: int, exclude_garant: bool = False, only_garant: bool = False) -> int:
     """Получить общее количество завершенных сделок пользователя"""
     history_statuses = [DealStatus.RELEASED, DealStatus.CANCELLED, DealStatus.DISPUTED]
     
     async with db() as conn:
         placeholders = ','.join('?' * len(history_statuses))
+
+        query = f"SELECT COUNT(*) as count FROM deals WHERE (owner_id=? OR partner_id=?) AND status IN ({placeholders})"
+
+        if exclude_garant:
+            query += " AND (side != 'GARANT' OR side IS NULL)"
+        elif only_garant:
+            query += " AND side = 'GARANT'"
+
         cur = await conn.execute(
-            f"SELECT COUNT(*) as count FROM deals WHERE (owner_id=? OR partner_id=?) AND status IN ({placeholders})",
+            query,
             (user_id, user_id, *history_statuses)
         )
         row = await cur.fetchone()

@@ -22,8 +22,12 @@ from database import (
     send_notification,
     update_deal_status,
     upsert_user,
+    get_user_active_deals,
+    get_user_history_deals,
+    get_user_history_deals_count
 )
 from utils import btc_to_rub, get_btc_rub_rate, rub_to_btc
+from keyboards import garant_menu_kb, garant_deals_kb, my_deals_list_keyboard, history_list_keyboard
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -67,6 +71,152 @@ async def _find_user(username: str) -> dict | None:
 
 def _fmt_btc(amount: Decimal) -> str:
     return f"{amount:.8f}".rstrip("0").rstrip(".")
+
+
+@router.callback_query(F.data == "garant:menu")
+async def garant_menu(callback: CallbackQuery, state: FSMContext):
+    """Меню Автогаранта"""
+    await state.clear()
+    text = "🛡 <b>Автогарант</b>\n\nЗдесь вы можете создать безопасную сделку с другим пользователем."
+    try:
+        await callback.message.edit_text(text, reply_markup=garant_menu_kb(), parse_mode="HTML")
+    except Exception:
+        await callback.message.answer(text, reply_markup=garant_menu_kb(), parse_mode="HTML")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "garant:deals_menu")
+async def garant_deals_menu(callback: CallbackQuery, state: FSMContext):
+    """Меню сделок Автогаранта"""
+    await state.clear()
+    text = "🛡 <b>Мои сделки Гаранта</b>\n\nВыберите раздел:"
+    try:
+        await callback.message.edit_text(text, reply_markup=garant_deals_kb(), parse_mode="HTML")
+    except Exception:
+        await callback.message.answer(text, reply_markup=garant_deals_kb(), parse_mode="HTML")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "garant:deals_active")
+async def garant_deals_active(callback: CallbackQuery, state: FSMContext):
+    """Активные сделки Автогаранта"""
+    await state.clear()
+    await callback.answer()
+
+    deals = await get_user_active_deals(callback.from_user.id, only_garant=True)
+
+    if not deals:
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="◀️ Назад", callback_data="garant:deals_menu")]
+        ])
+        try:
+            await callback.message.edit_text(
+                "📭 <b>У вас нет активных сделок Автогаранта</b>",
+                reply_markup=kb,
+                parse_mode="HTML"
+            )
+        except Exception:
+            await callback.message.answer(
+                "📭 <b>У вас нет активных сделок Автогаранта</b>",
+                reply_markup=kb,
+                parse_mode="HTML"
+            )
+        return
+
+    kb = await my_deals_list_keyboard(deals)
+    kb.inline_keyboard.append([InlineKeyboardButton(text="◀️ Назад", callback_data="garant:deals_menu")])
+
+    try:
+        await callback.message.edit_text(
+            "🛡 <b>Ваши активные сделки Гаранта</b> ✨\n\n"
+            "📋 <b>Выберите сделку для просмотра:</b>",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+    except Exception:
+        await callback.message.answer(
+            "🛡 <b>Ваши активные сделки Гаранта</b> ✨\n\n"
+            "📋 <b>Выберите сделку для просмотра:</b>",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+
+
+@router.callback_query(F.data == "garant:deals_history")
+async def garant_deals_history(callback: CallbackQuery, state: FSMContext):
+    """История сделок Автогаранта (первая страница)"""
+    await state.clear()
+    await callback.answer()
+    await _show_garant_history_page(callback, 1)
+
+
+@router.callback_query(F.data.startswith("garant:deals_history:page:"))
+async def garant_deals_history_page(callback: CallbackQuery, state: FSMContext):
+    """История сделок Автогаранта (конкретная страница)"""
+    try:
+        page = int(callback.data.split(":")[-1])
+        if page < 1: page = 1
+        if page > 100: page = 100
+    except (ValueError, IndexError):
+        page = 1
+
+    await callback.answer()
+    await _show_garant_history_page(callback, page)
+
+
+async def _show_garant_history_page(callback: CallbackQuery, page: int):
+    """Показать страницу истории сделок Автогаранта"""
+    DEALS_PER_PAGE = 8
+    MAX_PAGES = 100
+
+    total_deals = await get_user_history_deals_count(callback.from_user.id, only_garant=True)
+
+    if total_deals == 0:
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="◀️ Назад", callback_data="garant:deals_menu")]
+        ])
+        try:
+            await callback.message.edit_text(
+                "📭 <b>У вас нет завершённых сделок Автогаранта</b>",
+                reply_markup=kb,
+                parse_mode="HTML"
+            )
+        except Exception:
+            await callback.message.answer(
+                "📭 <b>У вас нет завершённых сделок Автогаранта</b>",
+                reply_markup=kb,
+                parse_mode="HTML"
+            )
+        return
+
+    total_pages = min((total_deals + DEALS_PER_PAGE - 1) // DEALS_PER_PAGE, MAX_PAGES)
+    if page > total_pages: page = total_pages
+
+    offset = (page - 1) * DEALS_PER_PAGE
+    deals = await get_user_history_deals(callback.from_user.id, limit=DEALS_PER_PAGE, offset=offset, only_garant=True)
+
+    kb = history_list_keyboard(deals, page=page, total_pages=total_pages)
+
+    # Меняем callback в кнопках пагинации (костыль, но работает)
+    for row in kb.inline_keyboard:
+        for btn in row:
+            if btn.callback_data and btn.callback_data.startswith("mydeals:history:page:"):
+                btn.callback_data = btn.callback_data.replace("mydeals:history:page:", "garant:deals_history:page:")
+            elif btn.callback_data and btn.callback_data == "mydeals:history:info":
+                btn.callback_data = "garant:deals_history:info"
+
+    kb.inline_keyboard.append([InlineKeyboardButton(text="◀️ Назад", callback_data="garant:deals_menu")])
+
+    text = (
+        "🛡 <b>История сделок Гаранта</b>\n\n"
+        f"📄 Страница {page} из {total_pages}\n"
+        "📋 <b>Выберите сделку для просмотра:</b>"
+    )
+
+    try:
+        await callback.message.edit_text(text, reply_markup=kb, parse_mode="HTML")
+    except Exception:
+        await callback.message.answer(text, reply_markup=kb, parse_mode="HTML")
 
 
 @router.callback_query(F.data == "garant:start")
@@ -414,3 +564,8 @@ async def garant_fiat_ok(callback: CallbackQuery):
         deal["partner_id"],
         f"✅ Инициатор подтвердил фиат по автогаранту #{deal_id}. BTC отправляется на ваш кошелёк.",
     )
+
+@router.callback_query(F.data == "garant:deals_history:info")
+async def garant_deals_history_info(callback: CallbackQuery):
+    """Информация о странице (не делает ничего, просто показывает текущую страницу)"""
+    await callback.answer()
