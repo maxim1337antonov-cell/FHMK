@@ -1,6 +1,5 @@
 """
-Главные обработчики (старт, помощь, профиль, меню)
-"""
+Главные обработчики (старт, помощь, профиль, меню)\n"""
 import re
 import logging
 from aiogram import Router, F, Bot
@@ -57,7 +56,7 @@ if DEPOSIT_NOTIFY_CHAT_ID:
         flags={"deposit_notify": True}  # Флаг для идентификации
     )
     async def deposit_notify_handler(message: Message):
-        """Обработчик сообщений из чата уведомлений о депозитах.
+        """Обработчик сообщений из чата уведомлений о депозитах.\n"
         Парсит сообщение и автоматически подтверждает депозит.
         
         Формат сообщения: "От: @username\nСумма: 0.001 BTC\nТранзакция: ..."
@@ -118,20 +117,74 @@ if DEPOSIT_NOTIFY_CHAT_ID:
                     logger.info(f"✅ Найдена сделка #{deal_id} с совпадающей суммой: {deal_amount} BTC")
                     break
         
-        if not deal_id:
-            logger.warning(f"⚠️ Не найдена сделка с совпадающей суммой {amount} BTC для пользователя @{username}")
-            return
-
         from database import claim_deposit_message
         if not await claim_deposit_message(message.chat.id, message.message_id):
             logger.info(f"ℹ️ [АВТОПОДТВЕРЖДЕНИЕ] Сообщение {message.message_id} уже обработано, пропускаю")
             return
+
+        if not deal_id:
+            logger.warning(f"⚠️ Не найдена ожидающая сделка с совпадающей суммой {amount} BTC для пользователя @{username}")
+            logger.info(f"🆕 [АВТО-ГАРАНТ] Автоматически создаем новую сделку для перевода {amount} BTC от @{username}")
+
+            try:
+                from database import create_deal
+                from config import ESCROW_BTC_ADDRESS
+                from aiogram import Bot
+                from config import BOT_TOKEN
+                from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+                # Создаем новую сделку (пока без партнера)
+                new_deal_id = await create_deal(
+                    owner_id=user["tg_id"],
+                    min_btc=amount,
+                    max_btc=amount,
+                    escrow_address=ESCROW_BTC_ADDRESS,
+                    side="GARANT",
+                    status=DealStatus.AWAITING_PARTNER_USERNAME
+                )
+                logger.info(f"✅ [АВТО-ГАРАНТ] Создана новая сделка #{new_deal_id} для пользователя {user['tg_id']}")
+
+                # Отправляем сообщение пользователю
+                bot = Bot(token=BOT_TOKEN)
                 
-        # Подтверждаем депозит (без отправки уведомления - оно будет отправлено после нажатия "Депозит внесён")
+                kb = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="❌ Отменить создание сделки", callback_data=f"garant_auto:cancel_creation:{new_deal_id}")]
+                ])
+
+                msg_text = (
+                    "🔔 <b>АВТО-ГАРАНТ | ПОСТУПЛЕНИЕ BTC</b>\n\n"
+                    "Ваш перевод обнаружен!\n\n"
+                    f"💰 Сумма: <b>{amount} BTC</b>\n\n"
+                    "С кем вы хотите провести сделку?\n\n"
+                    "Отправьте Telegram username второго участника, например:\n"
+                    "<code>@username</code>\n\n"
+                    "После этого мы отправим ему предложение сделки."
+                )
+
+                await bot.send_message(
+                    chat_id=user["tg_id"],
+                    text=msg_text,
+                    reply_markup=kb,
+                    parse_mode="HTML"
+                )
+
+                # Устанавливаем состояние FSM для пользователя через Redis/Storage (это сложнее, так как у нас нет прямого FSMContext для другого юзера)
+                # Поэтому мы сохраняем состояние в Redis/Storage через Dispatcher (или используем обходной путь).
+                # Для простоты, так как состояние надо ставить, мы добавим обработчик всех текстовых сообщений,
+                # который будет проверять наличие сделок со статусом AWAITING_PARTNER_USERNAME
+
+                await bot.session.close()
+                return
+
+            except Exception as e:
+                logger.error(f"❌ [АВТО-ГАРАНТ] Ошибка при создании автоматической сделки: {e}", exc_info=True)
+                return
+
+        # Подтверждаем депозит для найденной сделки
         try:
             await confirm_deposit(deal_id)
             if deal_id:
-                logger.info(f"✅ Депозит подтверждён автоматически для сделки #{deal_id} (уведомление будет отправлено после нажатия 'Депозит внесён')")
+                logger.info(f"✅ Депозит подтверждён автоматически для сделки #{deal_id}")
             else:
                 logger.warning(f"⚠️ Не найдена подходящая сделка для подтверждения депозита от @{username}")
         except Exception as e:
