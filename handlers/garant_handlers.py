@@ -51,6 +51,7 @@ def _menu_kb() -> InlineKeyboardMarkup:
 def _owner_decision_kb(deal_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="✅ Подтвердить получение фиата", callback_data=f"garant:fiat_ok:{deal_id}")],
+        [InlineKeyboardButton(text="🔴 Отменить сделку", callback_data=f"garant_auto:request_cancel:{deal_id}")],
         [InlineKeyboardButton(text="⚠️ Оспорить", callback_data=f"deal:dispute:{deal_id}")],
     ])
 

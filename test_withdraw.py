@@ -1,3 +1,4 @@
+import pytest
 """
 Тестовый скрипт для проверки отправки команды /withdraw в бота
 """
@@ -5,6 +6,7 @@ import asyncio
 from decimal import Decimal
 from auto_withdraw import send_withdraw_command, init_withdraw_client
 
+@pytest.mark.asyncio
 async def test():
     print("Testing withdraw command...")
     
@@ -44,6 +46,7 @@ import asyncio
 from decimal import Decimal
 from auto_withdraw import send_withdraw_command, init_withdraw_client
 
+@pytest.mark.asyncio
 async def test():
     print("Testing withdraw command...")
     
@@ -77,3 +80,5 @@ async def test():
 if __name__ == "__main__":
     asyncio.run(test())
 
+
+"""

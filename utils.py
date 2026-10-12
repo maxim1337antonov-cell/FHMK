@@ -194,6 +194,11 @@ def get_status_emoji(status: str) -> str:
 def get_status_name(status: str) -> str:
     """Получить название статуса на русском"""
     status_names = {
+
+        "AwaitingPartnerUsername": "👤 Ожидание участника",
+        "AwaitingPartnerAccept": "⏳ Ожидание согласия",
+        "CancellationRequested": "⚠️ Запрос отмены",
+
         "AwaitingDeposit": "⏳ Ожидает депозита",
         "Confirming": "🔄 Подтверждение депозита",
         "Escrowed": "✅ Депозит подтверждён",

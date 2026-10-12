@@ -84,6 +84,11 @@ BTC_TO_RUB_RATE = Decimal(os.getenv("BTC_TO_RUB_RATE", "6500000"))  # Приме
 
 # Статусы сделок
 class DealStatus:
+
+    AWAITING_PARTNER_USERNAME = "AwaitingPartnerUsername" # Ожидает username (Авто-гарант)
+    AWAITING_PARTNER_ACCEPT = "AwaitingPartnerAccept"   # Ожидает согласия (Авто-гарант)
+    CANCELLATION_REQUESTED = "CancellationRequested"    # Запрос на отмену (Авто-гарант)
+
     AWAITING_DEPOSIT = "AwaitingDeposit"      # Ожидает депозита
     CONFIRMING = "Confirming"                  # Подтверждение депозита
     ESCROWED = "Escrowed"                      # Депозит подтверждён

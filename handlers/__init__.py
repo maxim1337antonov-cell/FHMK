@@ -13,6 +13,7 @@ from handlers.chat_handlers import router as chat_router
 from handlers.rating_handlers import router as rating_router
 from handlers.template_handlers import router as template_router
 from handlers.garant_handlers import router as garant_router
+from handlers.garant_auto_handlers import router as garant_auto_router
 
 
 def setup_handlers() -> Router:
@@ -26,6 +27,7 @@ def setup_handlers() -> Router:
     main_router_combined.include_router(main_router)
     main_router_combined.include_router(admin_router)
     main_router_combined.include_router(sell_router)
+    main_router_combined.include_router(garant_auto_router)
     main_router_combined.include_router(garant_router)
     main_router_combined.include_router(buy_router)
     main_router_combined.include_router(deal_router)
